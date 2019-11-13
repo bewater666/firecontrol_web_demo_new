@@ -46,7 +46,7 @@
     </update>
 
 
-    <select id="findByOrganId" resultType="com.orient.firecontrol_web_demo.model.organization.BuildingInfo">
+    <select id="findByOrganId" resultMap="BaseMap">
         SELECT <include refid="column_sql"/> FROM tb_buildinfo b LEFT JOIN tb_organ_building ob
         ON  ob.building_id = b.building_id LEFT JOIN tb_organization o
         ON o.id = ob.organ_id
