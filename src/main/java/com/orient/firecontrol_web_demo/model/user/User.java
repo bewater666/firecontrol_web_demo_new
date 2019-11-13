@@ -59,4 +59,6 @@ public class User implements Serializable {
     @ApiModelProperty(hidden = true)
     private OrganizationDto organization = new OrganizationDto();
 
+    private String haha;
+
 }
