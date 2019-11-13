@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.orient.firecontrol_web_demo.dao.alarm.AlarmDao">
+    <resultMap id="BaseMap" type="com.orient.firecontrol_web_demo.model.alarm.AlarmInfo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="deviceCode" column="devicecode" jdbcType="VARCHAR"/>
+        <result property="alarmDetail" column="alarmdetail" jdbcType="VARCHAR"/>
+        <result property="alarmTime" column="alarmtime" jdbcType="VARCHAR"/>
+        <result property="alarmGrade" column="alarmgrade" jdbcType="VARCHAR"/>
+        <result property="isHandler" column="ishandler" jdbcType="VARCHAR"/>
+        <result property="organId" column="organ_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <insert id="insert">
+        INSERT INTO tb_alarm (devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id)
+        VALUES (#{deviceCode},#{alarmTime},#{alarmDetail},#{alarmGrade},#{isHandler},#{organId})
+    </insert>
+
+    <update id="updateStatus">
+        UPDATE tb_alarm SET ishandler  = #{isHandler} WHERE devicecode = #{deviceCode}
+    </update>
+
+    <select id="findOne" resultMap="BaseMap">
+        SELECT devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+        WHERE devicecode = #{devicecode}
+    </select>
+
+    <select id="findAll" resultMap="BaseMap">
+        SELECT id,devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+    </select>
+    <select id="findByOrganId" resultMap="BaseMap">
+        SELECT id,devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+        WHERE organ_id = #{organId}
+    </select>
+
+    <select id="findHasHandler" resultMap="BaseMap">
+        SELECT id,devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+        WHERE ishandler = '已处理'
+    </select>
+    <select id="findOrganHasHandler" resultMap="BaseMap">
+        SELECT id,devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+        WHERE ishandler = '已处理' AND organ_id = #{organId}
+    </select>
+
+    <select id="findHandlerBad" resultMap="BaseMap">
+        SELECT id,devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+        WHERE ishandler = '处理失败'
+    </select>
+    <select id="findOrganHandlerBad" resultMap="BaseMap">
+        SELECT id,devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+        WHERE ishandler = '处理失败' AND organ_id = #{organId}
+    </select>
+
+    <select id="findUnHandler" resultMap="BaseMap">
+        SELECT id,devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+        WHERE ishandler = '未处理'
+    </select>
+    <select id="findOrganUnHandler" resultMap="BaseMap">
+        SELECT id,devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+        WHERE ishandler = '未处理' AND organ_id = #{organId}
+    </select>
+
+
+    <select id="findByDeviceCode" resultMap="BaseMap">
+        SELECT id,devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id FROM tb_alarm
+        WHERE devicecode = #{deviceCode}
+    </select>
+
+    <select id="countNum" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_alarm
+        WHERE alarmgrade = #{alarmGrade}
+    </select>
+    <select id="countOrganNum" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_alarm
+        WHERE alarmgrade = #{alarmGrade} AND organ_id = #{organId}
+    </select>
+
+
+
+
+
+</mapper>

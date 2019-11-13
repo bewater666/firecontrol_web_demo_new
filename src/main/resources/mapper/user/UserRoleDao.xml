@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.orient.firecontrol_web_demo.dao.user.UserRoleDao">
+    <insert id="addUser_Role">
+        INSERT INTO tb_user_role (userid,roleid) VALUES (#{userId},#{roleId})
+    </insert>
+    <update id="updateUser_Role">
+        UPDATE tb_user_role
+        <set>
+            <if test="roleId!='' and roleId!=null">
+               roleid = #{roleId}
+            </if>
+        </set>
+        WHERE userid = #{userId}
+    </update>
+    <select id="findByUserId" resultType="com.orient.firecontrol_web_demo.model.user.UserRole">
+        SELECT id,userid,roleid FROM tb_user_role WHERE userid = #{userId}
+    </select>
+</mapper>

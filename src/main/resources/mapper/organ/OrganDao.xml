@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.orient.firecontrol_web_demo.dao.organization.OrganDao">
+    <resultMap id="BaseMap" type="com.orient.firecontrol_web_demo.model.organization.Organization">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="organizationName" column="organ_name" jdbcType="VARCHAR"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <collection property="buildingInfoList" javaType="com.orient.firecontrol_web_demo.model.organization.BuildingInfo">
+            <id property="id" column="building_id" jdbcType="INTEGER"/>
+            <result property="buildCode" column="buildcode" jdbcType="VARCHAR"/>
+            <result property="buildName" column="buildname" jdbcType="VARCHAR"/>
+            <result property="longitude" column="longitude" jdbcType="VARCHAR"/>
+            <result property="latitude" column="latitude" jdbcType="VARCHAR"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <sql id="detail_column">
+        o.id,o.organ_name,o.province,o.city,o.remark,b.building_id,b.buildcode,b.buildname,b.longitude,b.latitude,b.remark
+    </sql>
+
+    <insert id="addOrgan">
+        INSERT INTO tb_organization (organ_name,province,city,remark)
+        VALUES (#{organizationName},#{province},#{city},#{remark})
+    </insert>
+
+    <update id="updateOrgan">
+        UPDATE tb_organization
+        <set>
+            <if test="organizationName !=null and organizationName !=''">
+                organ_name = #{organizationName},
+            </if>
+            <if test="province !='' and province !=null">
+                province = #{province},
+            </if>
+            <if test="city !='' and city !=null">
+                city = #{city},
+            </if>
+            <if test="remark !='' and remark !=null">
+                remark = #{remark}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="listAll" resultMap="BaseMap">
+        SELECT <include refid="detail_column"/> FROM tb_organization o LEFT JOIN tb_organ_building ob
+        ON ob.organ_id = o.id LEFT JOIN tb_buildinfo b
+        ON b.building_id = ob.building_id
+    </select>
+
+    <select id="findByAccount" resultMap="BaseMap">
+        SELECT <include refid="detail_column"/> FROM tb_organization o LEFT JOIN tb_organ_building ob
+        ON ob.organ_id = o.id LEFT JOIN tb_buildinfo b
+        ON b.building_id = ob.building_id LEFT JOIN tb_user u
+        ON  u.organ_id = o.id
+        WHERE u.account = #{account}
+    </select>
+    <select id="findByOrganName" resultMap="BaseMap">
+        SELECT <include refid="detail_column"/> FROM tb_organization o LEFT JOIN tb_organ_building ob
+        ON ob.organ_id = o.id LEFT JOIN tb_buildinfo b
+        ON b.building_id = ob.building_id LEFT JOIN tb_user u
+        ON  u.organ_id = o.id
+        WHERE o.organ_name = #{organName}
+    </select>
+
+    <select id="findById" resultMap="BaseMap">
+        SELECT <include refid="detail_column"/> FROM tb_organization o LEFT JOIN tb_organ_building ob
+        ON ob.organ_id = o.id LEFT JOIN tb_buildinfo b
+        ON b.building_id = ob.building_id LEFT JOIN tb_user u
+        ON  u.organ_id = o.id
+        WHERE o.id = #{id}
+    </select>
+
+    <select id="findByBuildId" resultType="java.lang.Integer">
+        SELECT organ_id FROM tb_organ_building
+        WHERE building_id = #{buildId}
+    </select>
+</mapper>

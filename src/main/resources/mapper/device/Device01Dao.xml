@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.orient.firecontrol_web_demo.dao.device.Device01Dao">
+    <resultMap id="BaseMap" type="com.orient.firecontrol_web_demo.model.device.Device01">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="deviceCode" column="deviceCode" jdbcType="VARCHAR"/>
+        <result property="voltageA" column="voltageA" jdbcType="VARCHAR"/>
+        <result property="voltageB" column="voltageB" jdbcType="VARCHAR"/>
+        <result property="voltageC" column="voltageC" jdbcType="VARCHAR"/>
+        <result property="remainElec" column="remainElec" jdbcType="VARCHAR"/>
+        <result property="boxTemp" column="boxTemp" jdbcType="VARCHAR"/>
+        <result property="measureTime" column="measureTime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <insert id="insertDevice01Measure">
+        INSERT INTO tb_device1_measure (deviceCode,voltageA,voltageB,voltageC,remainElec,boxTemp,measureTime)
+        VALUES (#{deviceCode},#{voltageA},#{voltageB},#{voltageC},#{remainElec},#{boxTemp},#{measureTime})
+    </insert>
+    <select id="findById" resultType="com.orient.firecontrol_web_demo.model.device.Device01">
+        SELECT id,deviceCode,voltageA,voltageB,voltageC,remainElec,boxTemp,measureTime FROM tb_device1_measure WHERE id = #{id}
+    </select>
+    <select id="listByDeviceCode" resultType="com.orient.firecontrol_web_demo.model.device.Device01">
+        SELECT id,deviceCode,voltageA,voltageB,voltageC,remainElec,boxTemp,measureTime FROM tb_device1_measure
+        WHERE deviceCode = #{deviceCode} order By id DESC
+    </select>
+
+
+</mapper>

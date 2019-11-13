@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.orient.firecontrol_web_demo.dao.device.DeviceInfoDao">
+    <resultMap id="BaseMap" type="com.orient.firecontrol_web_demo.model.device.DeviceInfo">
+        <id property="id" column="" jdbcType="INTEGER"/>
+        <result property="buildCode" column="buildcode" jdbcType="VARCHAR"/>
+        <result property="deviceCode" column="devicecode" jdbcType="VARCHAR"/>
+        <result property="deviceName" column="devicename" jdbcType="VARCHAR"/>
+        <result property="deviceType" column="devicetype" jdbcType="VARCHAR"/>
+        <result property="typeName" column="typename" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="floorCode" column="floor_code" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="addDevice">
+        INSERT INTO tb_device (buildCode,deviceCode,deviceName,deviceType,typename,status,floor_code)
+        VALUES (#{buildCode},#{deviceCode},#{deviceName},#{deviceType},#{typeName},'离线',#{floorCode})
+    </insert>
+
+
+    <update id="updateDeviceStatus">
+        UPDATE tb_device SET status = #{statusFF} WHERE devicecode = #{deviceCode}
+    </update>
+
+
+    <select id="findAll" resultType="com.orient.firecontrol_web_demo.model.device.DeviceInfo">
+        SELECT id,buildcode,devicecode,devicetype,devicename,status,floor_code FROM tb_device
+    </select>
+
+    <select id="findOne" resultType="com.orient.firecontrol_web_demo.model.device.DeviceInfo">
+        SELECT b.buildname,d.id,d.buildcode,d.devicecode,d.devicetype,d.devicename,d.status,d.floor_code FROM tb_device d
+        LEFT JOIN tb_buildinfo b ON b.buildcode = d.buildcode
+        WHERE d.devicecode = #{deviceCode}
+    </select>
+
+    <select id="findByBuildCode" resultType="com.orient.firecontrol_web_demo.model.device.DeviceInfo">
+        SELECT id,buildcode,devicecode,devicetype,devicename,status,floor_code FROM tb_device WHERE buildcode = #{buildCode}
+    </select>
+
+    <select id="findByBuildCodeAndFloorCode"
+            resultType="com.orient.firecontrol_web_demo.model.device.DeviceInfo">
+        SELECT id,buildcode,devicecode,devicetype,devicename,status,floor_code,typename FROM tb_device
+        WHERE buildcode = #{buildCode} AND floor_code = #{floorCode}
+    </select>
+</mapper>

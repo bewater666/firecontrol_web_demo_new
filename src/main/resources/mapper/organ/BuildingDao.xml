@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.orient.firecontrol_web_demo.dao.organization.BuildingDao">
+    <resultMap id="BaseMap" type="com.orient.firecontrol_web_demo.model.organization.BuildingInfo">
+        <id property="id" column="building_id" jdbcType="INTEGER"/>
+        <result property="buildCode" column="buildcode" jdbcType="VARCHAR"/>
+        <result property="buildName" column="buildname" jdbcType="VARCHAR"/>
+        <result property="longitude" column="longitude" jdbcType="VARCHAR"/>
+        <result property="latitude" column="latitude" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="column_sql">
+        b.building_id,b.buildcode,b.buildname,b.longitude,b.latitude,b.remark
+    </sql>
+
+    <insert id="addBuild">
+        INSERT INTO tb_buildinfo (buildcode,buildname,longitude,latitude,remark)
+        VALUES (#{buildCode},#{buildName},#{longitude},#{latitude},#{remark})
+    </insert>
+
+    <insert id="addOrgan_build">
+        INSERT INTO tb_organ_building (organ_id,building_id) VALUES (#{organId},#{buildId})
+    </insert>
+
+    <update id="updateBuild">
+        UPDATE tb_buildinfo
+        <set>
+            <if test="buildCode !='' and buildCode !=null">
+                buildcode = #{buildCode},
+            </if>
+            <if test="buildName !='' and buildName !=null">
+                buildname = #{buildName},
+            </if>
+            <if test="longitude !='' and longitude !=null">
+                longitude = #{longitude},
+            </if>
+            <if test="latitude !='' and latitude !=null">
+                latitude = #{latitude},
+            </if>
+            <if test="remark !='' and remark !=null">
+                remark = #{remark}
+            </if>
+        </set>
+        WHERE building_id = #{id}
+    </update>
+
+
+    <select id="findByOrganId" resultType="com.orient.firecontrol_web_demo.model.organization.BuildingInfo">
+        SELECT <include refid="column_sql"/> FROM tb_buildinfo b LEFT JOIN tb_organ_building ob
+        ON  ob.building_id = b.building_id LEFT JOIN tb_organization o
+        ON o.id = ob.organ_id
+        WHERE o.id = #{organId}
+    </select>
+
+    <select id="findById" resultMap="BaseMap">
+        SELECT building_id,buildcode,buildname,longitude,latitude,remark FROM tb_buildinfo WHERE building_id = #{buildingId}
+    </select>
+    <select id="findByBuildCode" resultMap="BaseMap">
+        SELECT building_id,buildcode,buildname,longitude,latitude,remark FROM tb_buildinfo WHERE buildcode = #{buildCode}
+    </select>
+    <select id="findByBuildName" resultMap="BaseMap">
+        SELECT building_id,buildcode,buildname,longitude,latitude,remark FROM tb_buildinfo WHERE buildname = #{buildName}
+    </select>
+    <select id="findAll" resultMap="BaseMap">
+        SELECT building_id,buildcode,buildname,longitude,latitude,remark FROM tb_buildinfo
+    </select>
+</mapper>

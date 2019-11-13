@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.orient.firecontrol_web_demo.dao.organization.FloorDao">
+    <resultMap id="BaseMap" type="com.orient.firecontrol_web_demo.model.organization.FloorInfo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="buildCode" column="build_code" jdbcType="VARCHAR"/>
+        <result property="floorCode" column="floor_code" jdbcType="INTEGER"/>
+        <result property="floorName" column="floor_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="addFloor">
+        INSERT INTO tb_floor(build_code,floor_code,floor_name) VALUES (#{buildCode},#{floorCode},#{floorName})
+    </insert>
+
+
+
+    <select id="listByBuildCode" resultMap="BaseMap">
+        SELECT id,build_code,floor_code,floor_name FROM tb_floor
+        WHERE build_code = #{buildCode}
+    </select>
+    <select id="floorIsRight" resultMap="BaseMap">
+        SELECT id,build_code,floor_code,floor_name FROM tb_floor
+        WHERE build_code = #{buildCode} and floor_code = #{floorCode}
+    </select>
+</mapper>
