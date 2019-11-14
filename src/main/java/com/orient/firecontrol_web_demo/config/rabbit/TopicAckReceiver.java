@@ -20,6 +20,9 @@ import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * @author bewater
  * @version 1.0
@@ -113,9 +116,13 @@ public class TopicAckReceiver implements ChannelAwareMessageListener {
                     }
                     System.out.println("当前告警信息==="+alarmDetail);
                     AlarmInfo alarmInfo = new AlarmInfo();
-                    alarmInfo.setAlarmDetail(alarmDetail).setAlarmTime("20"+datai.substring(12, 14)+"-"+datai.substring(14, 16)
+                    String alarmTime = "20"+datai.substring(12, 14)+"-"+datai.substring(14, 16)
                             +"-"+datai.substring(16, 18)
-                            +" "+datai.substring(18, 20)+":"+datai.substring(20, 22)+":"+datai.substring(22, 24))
+                            +" "+datai.substring(18, 20)+":"+datai.substring(20, 22)+":"+datai.substring(22, 24);
+                    //将告警时间 string转成date  以便后面根据时间查询
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date parse = simpleDateFormat.parse(alarmTime);
+                    alarmInfo.setAlarmDetail(alarmDetail).setAlarmTime(parse)
                             .setDeviceCode(msg.substring(10, 20)+datai.substring(0, 6))
                             .setAlarmGrade(alarmGrade+"级告警").setIsHandler("未处理");
                     String buildCode = (msg.substring(10, 20)+datai.substring(0, 6)).substring(0, 10);

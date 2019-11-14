@@ -5,7 +5,7 @@
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="deviceCode" column="devicecode" jdbcType="VARCHAR"/>
         <result property="alarmDetail" column="alarmdetail" jdbcType="VARCHAR"/>
-        <result property="alarmTime" column="alarmtime" jdbcType="VARCHAR"/>
+        <result property="alarmTime" column="alarmtime" jdbcType="TIMESTAMP"/>
         <result property="alarmGrade" column="alarmgrade" jdbcType="VARCHAR"/>
         <result property="isHandler" column="ishandler" jdbcType="VARCHAR"/>
         <result property="organId" column="organ_id" jdbcType="INTEGER"/>
