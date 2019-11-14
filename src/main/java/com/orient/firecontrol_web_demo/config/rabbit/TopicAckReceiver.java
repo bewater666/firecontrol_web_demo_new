@@ -155,6 +155,9 @@ public class TopicAckReceiver implements ChannelAwareMessageListener {
                 //取出拼接进去的时间戳
                 String measureTime = msg.substring(20+len,20+len+19);
                 System.out.println("测量时间:"+measureTime);
+                //将时间由String 类型 转成date类型
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date parse = simpleDateFormat.parse(measureTime);
                 //这里不要留时间 把时间拿掉 去我们需要的测量数据即可 时间前面拿到就行了
                 String data = msg.substring(28, msg.length() - 21);
                 for (int i = 0; i <data.length();) {
@@ -196,7 +199,7 @@ public class TopicAckReceiver implements ChannelAwareMessageListener {
                         Device01 device01 = new Device01();
                         device01.setVoltageA(voltageA / 100 + "V").setVoltageB(voltageB / 100 + "V").setVoltageC(voltageC / 100 + "V")
                                 .setRemainElec(remainElec / 10 + "mA").setBoxTemp(boxTemp / 10 + "℃").setDeviceCode(deviceCode)
-                                .setMeasureTime(measureTime);
+                                .setMeasureTime(parse);
                         device01Dao.insertDevice01Measure(device01);
                         i = i + 4 * 7;
                     }
@@ -218,7 +221,7 @@ public class TopicAckReceiver implements ChannelAwareMessageListener {
                         System.out.println("支路接头温度===" + branchTemp / 10 + "℃");
                         Device02 device02 = new Device02();
                         device02.setBranchElec(branchElec / 100 + "mA").setBranchTemp(branchTemp / 10 + "℃").setDeviceCode(deviceCode)
-                                .setMeasureTime(measureTime);
+                                .setMeasureTime(parse);
                         device02Dao.insertDevice02Measure(device02);
                         i = i + 4 * 4;
                     }
@@ -266,7 +269,7 @@ public class TopicAckReceiver implements ChannelAwareMessageListener {
                         device03.setBranchElecA(branchElecA / 100 + "mA").setBranchElecB(branchElecB / 100 + "mA")
                                 .setBranchElecC(branchElecC / 100 + "mA").setBranchTempA(branchTempA / 10 + "℃")
                                 .setBranchTempB(branchTempB / 10 + "℃").setBranchTempC(branchTempC / 10 + "℃")
-                                .setDeviceCode(deviceCode).setMeasureTime(measureTime);
+                                .setDeviceCode(deviceCode).setMeasureTime(parse);
                         device03Dao.insertDevice03Measure(device03);
                         i = i + 4 * 8;
                     }

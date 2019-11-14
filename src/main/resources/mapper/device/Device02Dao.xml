@@ -6,7 +6,7 @@
         <result property="deviceCode" column="deviceCode" jdbcType="VARCHAR"/>
         <result property="branchElec" column="branchElec" jdbcType="VARCHAR"/>
         <result property="branchTemp" column="branchTemp" jdbcType="VARCHAR"/>
-        <result property="measureTime" column="measureTime" jdbcType="VARCHAR"/>
+        <result property="measureTime" column="measureTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <insert id="insertDevice02Measure">

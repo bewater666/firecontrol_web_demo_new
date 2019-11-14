@@ -10,7 +10,7 @@
         <result property="branchTempA" column="branchTempA" jdbcType="VARCHAR"/>
         <result property="branchTempB" column="branchTempB" jdbcType="VARCHAR"/>
         <result property="branchTempC" column="branchTempC" jdbcType="VARCHAR"/>
-        <result property="measureTime" column="measureTime" jdbcType="VARCHAR"/>
+        <result property="measureTime" column="measureTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     
     

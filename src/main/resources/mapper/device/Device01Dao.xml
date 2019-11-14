@@ -9,7 +9,7 @@
         <result property="voltageC" column="voltageC" jdbcType="VARCHAR"/>
         <result property="remainElec" column="remainElec" jdbcType="VARCHAR"/>
         <result property="boxTemp" column="boxTemp" jdbcType="VARCHAR"/>
-        <result property="measureTime" column="measureTime" jdbcType="VARCHAR"/>
+        <result property="measureTime" column="measureTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
 

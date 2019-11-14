@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 /**
  * @author bewater
  * @version 1.0
@@ -18,5 +20,5 @@ public class Device02 {
     private String deviceCode;  //设备编号
     private String branchElec;  //支路电流
     private String branchTemp;  //支路接头温度
-    private String measureTime; //测量时间 这边接收硬件信息的时候就将收到数据的时间戳当成测量时间 拼接进去插入队列
+    private Date measureTime; //测量时间 这边接收硬件信息的时候就将收到数据的时间戳当成测量时间 拼接进去插入队列
 }
