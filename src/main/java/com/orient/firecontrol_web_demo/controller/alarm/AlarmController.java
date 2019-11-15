@@ -8,7 +8,10 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author bewater
@@ -92,13 +95,12 @@ public class AlarmController {
      * 超级管理员直接根据等级统级个数
      * 单位领导需传入部门id
      * 同样只允许superadmin admin访问
-     * @param grade
      * @return
      */
-    @ApiOperation(value = "统计各级告警数目",notes = "统计各级告警数目接口,0代表0级告警...3代表3级告警")
-    @GetMapping("/count/{grade}")
+    @ApiOperation(value = "统计各级告警数目",notes = "统计各级告警数目接口,num0代表0级告警数量...num3代表3级告警数量")
+    @GetMapping("/count")
     @RequiresAuthentication
-    public ResultBean countAlarm(@PathVariable("grade") @ApiParam(name = "grade",value = "告警级别") Integer grade){
-        return alarmService.countAlarmGrade(grade);
+    public ResultBean countAlarm(){
+        return alarmService.countAlarmGrade();
     }
 }

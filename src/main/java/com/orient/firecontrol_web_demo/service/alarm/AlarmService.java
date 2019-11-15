@@ -17,7 +17,9 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author bewater
@@ -195,58 +197,42 @@ public class AlarmService {
      * 超级管理员直接根据等级统级个数
      * 单位领导需传入部门id
      * 同样只允许superadmin admin访问
-     * @param grade
      * @return
      */
-    public ResultBean countAlarmGrade(Integer grade){
+    public ResultBean countAlarmGrade(){
         //获取当前账户
         String account = JwtUtil.getClaim(SecurityUtils.getSubject().getPrincipals().toString(), Constant.ACCOUNT);
         //获取当前用户的部门id organId
         Integer organId = userDao.findOneByAccount(account).getOrganId();
-        String alarmGrade = "";
         if (organId==0){//superadmin 不需传organId
-            if (grade==0){
-                alarmGrade = "0级告警";
-                int i = alarmDao.countNum(alarmGrade);
-                return new ResultBean(200, "全部的0级告警统计成功", i);
-            }
-            if (grade==1){
-                alarmGrade = "1级告警";
-                int i = alarmDao.countNum(alarmGrade);
-                return new ResultBean(200, "全部的1级告警统计成功", i);
-            }
-            if (grade==2){
-                alarmGrade = "2级告警";
-                int i = alarmDao.countNum(alarmGrade);
-                return new ResultBean(200, "全部的2级告警统计成功", i);
-            }
-            if (grade==3){
-                alarmGrade = "3级告警";
-                int i = alarmDao.countNum(alarmGrade);
-                return new ResultBean(200, "全部的3级告警统计成功", i);
-            }
-            throw new CustomException("输入告警级别有误,请重新输入");
+            String alarmGrade0 = "0级告警";
+            int num0 = alarmDao.countNum(alarmGrade0);
+            String alarmGrade1 = "1级告警";
+            int num1 = alarmDao.countNum(alarmGrade1);
+            String alarmGrade2 = "2级告警";
+            int num2 = alarmDao.countNum(alarmGrade2);
+            String alarmGrade3 = "3级告警";
+            int num3 = alarmDao.countNum(alarmGrade3);
+            Map<String,Object> map = new HashMap<>();
+            map.put("num0", num0);
+            map.put("num1", num1);
+            map.put("num2", num2);
+            map.put("num3", num3);
+            return new ResultBean(200, "统计成功", map);
         }
-        if (grade==0){
-            alarmGrade = "0级告警";
-            int i = alarmDao.countOrganNum(alarmGrade,organId);
-            return new ResultBean(200, "该部门下的0级告警统计成功", i);
-        }
-        if (grade==1){
-            alarmGrade = "1级告警";
-            int i = alarmDao.countOrganNum(alarmGrade,organId);
-            return new ResultBean(200, "该部门下的1级告警统计成功", i);
-        }
-        if (grade==2){
-            alarmGrade = "2级告警";
-            int i = alarmDao.countOrganNum(alarmGrade,organId);
-            return new ResultBean(200, "该部门下的2级告警统计成功", i);
-        }
-        if (grade==3){
-            alarmGrade = "3级告警";
-            int i = alarmDao.countOrganNum(alarmGrade,organId);
-            return new ResultBean(200, "该部门下的3级告警统计成功", i);
-        }
-        throw new CustomException("输入告警级别有误,请重新输入");
+            String alarmGrade0 = "0级告警";
+            int num0 = alarmDao.countOrganNum(alarmGrade0,organId);
+            String alarmGrade1 = "1级告警";
+            int num1 = alarmDao.countOrganNum(alarmGrade1,organId);
+            String alarmGrade2 = "2级告警";
+            int num2 = alarmDao.countOrganNum(alarmGrade2,organId);
+            String alarmGrade3 = "3级告警";
+            int num3 = alarmDao.countOrganNum(alarmGrade3,organId);
+            Map<String,Object> map = new HashMap<>();
+            map.put("num0", num0);
+            map.put("num1", num1);
+            map.put("num2", num2);
+            map.put("num3", num3);
+            return new ResultBean(200, "统计成功", map);
     }
 }
