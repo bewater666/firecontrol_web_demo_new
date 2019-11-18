@@ -1,7 +1,10 @@
 package com.orient.firecontrol_web_demo.service.alarm;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.orient.firecontrol_web_demo.config.exception.CustomException;
 import com.orient.firecontrol_web_demo.config.jwt.JwtUtil;
+import com.orient.firecontrol_web_demo.config.page.PageUtils;
 import com.orient.firecontrol_web_demo.dao.alarm.AlarmDao;
 import com.orient.firecontrol_web_demo.dao.device.DeviceInfoDao;
 import com.orient.firecontrol_web_demo.dao.organization.BuildingDao;
@@ -48,7 +51,11 @@ public class AlarmService {
      * 超级管理员查看所有
      * @return
      */
-    public ResultBean list(){
+    public PageInfo<AlarmInfo> list(PageUtils pageUtils){
+        if (pageUtils.getPage()==null || pageUtils.getRows()==null){
+           pageUtils.setPage(1);
+            pageUtils.setRows(10);
+        }
         //获取当前账户
         String account = JwtUtil.getClaim(SecurityUtils.getSubject().getPrincipals().toString(), Constant.ACCOUNT);
         List<Role> byUser = roleDao.findByUser(account);
@@ -56,19 +63,23 @@ public class AlarmService {
         byUser) {
             String roleName = role.getRoleName();
             if (roleName.equals("superadmin")){ //若是超级管理 该接口就是查看所有单位下的告警列表
-                List<AlarmInfo> all = alarmDao.findAll();
-                if (all.size()==0){
-                    return new ResultBean(200, "查询成功,所有单位均无告警信息", null);
-                }
-                return new ResultBean(200, "查询所有单位告警信息成功", all);
+            PageHelper.startPage(pageUtils.getPage(),pageUtils.getRows());
+            List<AlarmInfo> all = alarmDao.findAll();
+            PageInfo<AlarmInfo> pageInfo = new PageInfo<>(all);
+            if(all.size()==0){
+                throw new CustomException("查询失败,当前数据库中无告警信息");
+            }
+            return pageInfo;
             }
             if (roleName.equals("admin")){ //若是单位领导 则是查看自己单位下的告警列表
                 Integer organId = organDao.findByAccount(account).getId();
+                PageHelper.startPage(pageUtils.getPage(),pageUtils.getRows());
                 List<AlarmInfo> byOrganId = alarmDao.findByOrganId(organId);
-                if (byOrganId.size()==0){
-                    return new ResultBean(200, "查询成功,该单位下无告警信息", null);
+                PageInfo<AlarmInfo> pageInfo = new PageInfo<>(byOrganId);
+                if(byOrganId.size()==0){
+                    throw new CustomException("查询失败,当前单位无告警信息");
                 }
-                return new ResultBean(200, "查询单位告警信息成功", byOrganId);
+                return pageInfo;
             }
             throw new CustomException("查询失败");
         }

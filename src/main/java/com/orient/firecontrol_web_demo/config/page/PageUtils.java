@@ -1,6 +1,7 @@
 package com.orient.firecontrol_web_demo.config.page;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 import javax.validation.constraints.Max;
@@ -26,9 +27,11 @@ public class PageUtils implements Serializable {
     private Integer rows;
 
     /** 排序的列名 */
+    @ApiParam(hidden = true)
     private String sidx;
 
     /** 排序规则(DESC或者ESC) */
+    @ApiParam(hidden = true)
     private String sord;
 
 

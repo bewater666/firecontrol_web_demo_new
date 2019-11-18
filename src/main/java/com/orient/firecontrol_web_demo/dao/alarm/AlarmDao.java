@@ -108,4 +108,6 @@ public interface AlarmDao {
     int countOrganNum(@Param("alarmGrade") String alarmGrade,@Param("organId") Integer organId);
 
 
+
+
 }

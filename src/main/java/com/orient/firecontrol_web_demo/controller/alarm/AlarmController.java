@@ -1,5 +1,8 @@
 package com.orient.firecontrol_web_demo.controller.alarm;
 
+import com.github.pagehelper.PageInfo;
+import com.orient.firecontrol_web_demo.config.page.PageUtils;
+import com.orient.firecontrol_web_demo.model.alarm.AlarmInfo;
 import com.orient.firecontrol_web_demo.model.common.ResultBean;
 import com.orient.firecontrol_web_demo.service.alarm.AlarmService;
 import io.swagger.annotations.ApiOperation;
@@ -8,10 +11,11 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author bewater
@@ -34,8 +38,14 @@ public class AlarmController {
     @ApiOperation(value = "告警信息列表",notes = "告警信息列表,需登录查看,超级管理员查看所有,单位管理员查看自己单位下的告警信息")
     @GetMapping("/view")
     @RequiresRoles(value = {"superadmin","admin"},logical = Logical.OR)
-    public ResultBean list(){
-        return alarmService.list();
+    public ResultBean list(@ModelAttribute @Validated PageUtils pageUtils){
+        PageInfo<AlarmInfo> pageInfo = alarmService.list(pageUtils);
+        Map<String,Object> map = new HashMap<>();
+        map.put("currentPage", pageUtils.getPage());
+        map.put("thisPageNum", pageInfo.getSize());
+        map.put("alarmList", pageInfo.getList());
+        map.put("totalNum", pageInfo.getTotal());
+        return  new ResultBean(200,"查询成功",map);
     }
 
     /**
