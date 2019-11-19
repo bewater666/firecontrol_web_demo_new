@@ -1,5 +1,6 @@
 package com.orient.firecontrol_web_demo.dao.alarm;
 
+import com.orient.firecontrol_web_demo.model.alarm.AlarmCount;
 import com.orient.firecontrol_web_demo.model.alarm.AlarmInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -108,6 +109,20 @@ public interface AlarmDao {
     int countOrganNum(@Param("alarmGrade") String alarmGrade,@Param("organId") Integer organId);
 
 
+    /**
+     * 计数 所有部门最近7天的告警数量
+     * 超级管理员使用
+     * @return
+     */
+    List<AlarmCount> countLast7Days();
+
+    /**
+     * 单位领导 计数各自单位 最近7天的告警数量
+     * 单位领导使用  超级管理员也可使用
+     * @param organId
+     * @return
+     */
+    List<AlarmCount> countOrganLast7Days(int organId);
 
 
 }

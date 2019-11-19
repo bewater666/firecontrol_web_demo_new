@@ -11,6 +11,7 @@ import com.orient.firecontrol_web_demo.dao.organization.BuildingDao;
 import com.orient.firecontrol_web_demo.dao.organization.OrganDao;
 import com.orient.firecontrol_web_demo.dao.user.RoleDao;
 import com.orient.firecontrol_web_demo.dao.user.UserDao;
+import com.orient.firecontrol_web_demo.model.alarm.AlarmCount;
 import com.orient.firecontrol_web_demo.model.alarm.AlarmInfo;
 import com.orient.firecontrol_web_demo.model.common.Constant;
 import com.orient.firecontrol_web_demo.model.common.ResultBean;
@@ -20,6 +21,8 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -245,5 +248,45 @@ public class AlarmService {
             map.put("num2", num2);
             map.put("num3", num3);
             return new ResultBean(200, "统计成功", map);
+    }
+
+
+    /**
+     * 计数最近7天内的告警数量
+     * superadmin计数所有部门的
+     * admin计数各自部门的最近7天的告警数量
+     * @return
+     */
+    public ResultBean countLast7Days(){
+        //获取当前账户
+        String account = JwtUtil.getClaim(SecurityUtils.getSubject().getPrincipals().toString(), Constant.ACCOUNT);
+        //获取当前用户的部门id organId
+        Integer organId = userDao.findOneByAccount(account).getOrganId();
+        List timeList = new ArrayList();
+        List numList = new ArrayList();
+        Map<String,Object> map = new HashMap<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if (organId==0){//超级管理员
+            List<AlarmCount> alarmCounts = alarmDao.countLast7Days();
+            for (AlarmCount alarmCount:
+            alarmCounts) {
+                String format = simpleDateFormat.format(alarmCount.getClick_date());
+                timeList.add(format);
+                numList.add(alarmCount.getCount());
+            }
+            map.put("timeList", timeList);
+            map.put("numList", numList);
+            return new ResultBean(200, "计数成功", map);
+        }
+        //单位领导 (因为 我接口设置了权限  只有superadmin 和admin才能访问此资源)
+        List<AlarmCount> alarmCounts = alarmDao.countOrganLast7Days(organId);
+        for (AlarmCount alarmCount:
+        alarmCounts) {
+            timeList.add(alarmCount.getClick_date());
+            numList.add(alarmCount.getCount());
+        }
+        map.put("timeList", timeList);
+        map.put("numList", numList);
+        return new ResultBean(200, "计数成功", map);
     }
 }

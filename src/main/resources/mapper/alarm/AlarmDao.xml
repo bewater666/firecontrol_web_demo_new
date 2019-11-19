@@ -11,6 +11,11 @@
         <result property="organId" column="organ_id" jdbcType="INTEGER"/>
     </resultMap>
 
+    <resultMap id="countMap" type="com.orient.firecontrol_web_demo.model.alarm.AlarmCount">
+        <result property="click_date" column="click_date" jdbcType="TIMESTAMP"/>
+        <result property="count" column="count" jdbcType="INTEGER"/>
+    </resultMap>
+
 
     <insert id="insert">
         INSERT INTO tb_alarm (devicecode,alarmtime,alarmdetail,alarmgrade,ishandler,organ_id)
@@ -76,8 +81,51 @@
         WHERE alarmgrade = #{alarmGrade} AND organ_id = #{organId}
     </select>
 
-
-
+<!--小于等于的转义符&lt;=    大于等于的转义符 &gt;= -->
+    <select id="countLast7Days" resultMap="countMap">
+        select a.click_date,ifnull(b.count,0) as count
+        from (
+        SELECT curdate() as click_date
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        ) a left join (
+        select date(alarmtime) as datetime, count(*) as count
+        from tb_alarm
+        group by date(alarmtime)
+        ) b on a.click_date = b.datetime;
+    </select>
+    <select id="countOrganLast7Days" resultMap="countMap">
+        select a.click_date,ifnull(b.count,0) as count
+        from (
+        SELECT curdate() as click_date
+        union all
+        SELECT date_sub(curdate(), interval 1 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 2 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 3 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 4 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 5 day) as click_date
+        union all
+        SELECT date_sub(curdate(), interval 6 day) as click_date
+        ) a left join (
+        select date(alarmtime) as datetime, count(*) as count
+        from tb_alarm where organ_id = #{organId}
+        group by date(alarmtime)
+        ) b on a.click_date = b.datetime;
+    </select>
 
 
 </mapper>

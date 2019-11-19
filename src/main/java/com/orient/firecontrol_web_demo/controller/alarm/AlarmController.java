@@ -113,4 +113,18 @@ public class AlarmController {
     public ResultBean countAlarm(){
         return alarmService.countAlarmGrade();
     }
+
+
+    /**
+     * 计数最近7天内的告警数量
+     * superadmin计数所有部门的
+     * admin计数各自部门的最近7天的告警数量
+     * @return
+     */
+    @ApiOperation(value = "统计最近7天内的告警",notes = "计数最近7天内的告警数量,superadmin计数所有部门的,admin计数各自部门的最近7天的告警数量")
+    @RequiresRoles(value = {"superadmin","admin"},logical = Logical.OR)
+    @GetMapping("/countLast7")
+    public ResultBean countLast7Days(){
+        return alarmService.countLast7Days();
+    }
 }
