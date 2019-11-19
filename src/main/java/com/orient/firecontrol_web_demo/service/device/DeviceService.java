@@ -1,8 +1,9 @@
 package com.orient.firecontrol_web_demo.service.device;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.orient.firecontrol_web_demo.config.exception.CustomException;
-import com.orient.firecontrol_web_demo.config.page.PageBean;
+import com.orient.firecontrol_web_demo.config.page.PageUtils;
 import com.orient.firecontrol_web_demo.dao.device.Device01Dao;
 import com.orient.firecontrol_web_demo.dao.device.Device02Dao;
 import com.orient.firecontrol_web_demo.dao.device.Device03Dao;
@@ -97,18 +98,20 @@ public class DeviceService {
      * @param buildingId
      * @return
      */
-    public PageBean<DeviceInfo> findByBuildId(Integer currentPage,Integer pageSize,Integer buildingId){
-
+    public PageInfo<DeviceInfo> findByBuildId(PageUtils pageUtils, Integer buildingId){
+        if (pageUtils.getPage()==null || pageUtils.getRows()==null){
+            pageUtils.setPage(1);
+            pageUtils.setRows(10);
+        }
         BuildingInfo byId = buildingDao.findById(buildingId);
         if (byId==null){
             throw new CustomException("查询失败(输入的建筑物id不存在)");
         }
         String buildCode = byId.getBuildCode();
-        PageHelper.startPage(currentPage, pageSize);
+        PageHelper.startPage(pageUtils.getPage(), pageUtils.getRows());
         List<DeviceInfo> byBuildCode = deviceInfoDao.findByBuildCode(buildCode);
-        PageBean<DeviceInfo> pageBean = new PageBean<>(currentPage, pageSize, deviceInfoDao.findByBuildCode(buildCode).size());
-        pageBean.setItems(byBuildCode);
-        return pageBean;
+        PageInfo<DeviceInfo> pageInfo = new PageInfo<>(byBuildCode);
+        return pageInfo;
     }
 
 
@@ -118,7 +121,11 @@ public class DeviceService {
      * @param floorCode
      * @return
      */
-    public PageBean<DeviceInfo> listByBuildCodeAndFloorCode(Integer currentPage,Integer pageSize,String buildCode,Integer floorCode){
+    public PageInfo<DeviceInfo> listByBuildCodeAndFloorCode(PageUtils pageUtils,String buildCode,Integer floorCode){
+        if (pageUtils.getPage()==null || pageUtils.getRows()==null){
+            pageUtils.setPage(1);
+            pageUtils.setRows(10);
+        }
         BuildingInfo byBuildCode = buildingDao.findByBuildCode(buildCode);
         if (byBuildCode==null){
             throw new CustomException("建筑物编号不存在");
@@ -127,14 +134,13 @@ public class DeviceService {
         if (floorInfo==null){
             throw new CustomException("该建筑物下暂无"+floorCode+"楼");
         }
-        PageHelper.startPage(currentPage, pageSize);
+        PageHelper.startPage(pageUtils.getPage(), pageUtils.getRows());
         List<DeviceInfo> byBuildCodeAndFloorCode = deviceInfoDao.findByBuildCodeAndFloorCode(buildCode, floorCode);
-        if (byBuildCodeAndFloorCode==null){
+        if (byBuildCodeAndFloorCode.size()==0){
             throw new CustomException(floorCode+"楼无设备信息");
         }
-        PageBean<DeviceInfo> pageBean = new PageBean<>(currentPage, pageSize, deviceInfoDao.findByBuildCodeAndFloorCode(buildCode, floorCode).size());
-        pageBean.setItems(byBuildCodeAndFloorCode);
-        return pageBean;
+        PageInfo<DeviceInfo> pageInfo = new PageInfo<>(byBuildCodeAndFloorCode);
+        return pageInfo;
 
     }
 
@@ -184,13 +190,15 @@ public class DeviceService {
     /**
      * 根据设备编号查询所有(历史)数据
      * 注意 这里根据id进行了倒序  所以第一条就是最新的监测数据
-     * @param currentPage 页码
-     * @param pageSize  每页数量
      * @param deviceCode    设备编号
      * @param deviceType    设备类型
      * @return
      */
-    public PageBean listAllMeasure(Integer currentPage,Integer pageSize,String deviceCode,String deviceType){
+    public PageInfo listAllMeasure(PageUtils pageUtils,String deviceCode,String deviceType){
+        if (pageUtils.getPage()==null || pageUtils.getRows()==null){
+            pageUtils.setPage(1);
+            pageUtils.setRows(10);
+        }
         DeviceInfo one = deviceInfoDao.findOne(deviceCode);
         if (one==null){
             throw new CustomException("该设备编号不存在");
@@ -201,25 +209,22 @@ public class DeviceService {
         }
         Map<String,Object> map = new HashMap();
         if (deviceType.equals("01")){
-            PageHelper.startPage(currentPage, pageSize);
+            PageHelper.startPage(pageUtils.getPage(), pageUtils.getRows());
             List<Device01> device01s = device01Dao.listByDeviceCode(deviceCode);
-            PageBean<Device01> pageBean = new PageBean<>(currentPage, pageSize, device01Dao.listByDeviceCode(deviceCode).size());
-            pageBean.setItems(device01s);
-            return pageBean;
+            PageInfo pageInfo = new PageInfo(device01s);
+            return pageInfo;
         }
         if (deviceType.equals("02")){
-            PageHelper.startPage(currentPage, pageSize);
+            PageHelper.startPage(pageUtils.getPage(), pageUtils.getRows());
             List<Device02> device02s = device02Dao.listByDeviceCode(deviceCode);
-            PageBean<Device02> pageBean = new PageBean<>(currentPage, pageSize, device02Dao.listByDeviceCode(deviceCode).size());
-            pageBean.setItems(device02s);
-            return pageBean;
+            PageInfo pageInfo = new PageInfo(device02s);
+            return pageInfo;
         }
         if (deviceType.equals("03")){
-            PageHelper.startPage(currentPage, pageSize);
+            PageHelper.startPage(pageUtils.getPage(), pageUtils.getRows());
             List<Device03> device03s = device03Dao.listByDeviceCode(deviceCode);
-            PageBean<Device03> pageBean = new PageBean<>(currentPage, pageSize, device03Dao.listByDeviceCode(deviceCode).size());
-            pageBean.setItems(device03s);
-            return pageBean;
+            PageInfo pageInfo = new PageInfo(device03s);
+            return pageInfo;
         }
         return null;
     }

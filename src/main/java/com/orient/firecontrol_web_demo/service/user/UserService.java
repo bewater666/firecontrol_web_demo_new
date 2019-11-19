@@ -1,10 +1,11 @@
 package com.orient.firecontrol_web_demo.service.user;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.orient.firecontrol_web_demo.config.common.StringUtil;
 import com.orient.firecontrol_web_demo.config.exception.CustomException;
 import com.orient.firecontrol_web_demo.config.jwt.JwtUtil;
-import com.orient.firecontrol_web_demo.config.page.PageBean;
+import com.orient.firecontrol_web_demo.config.page.PageUtils;
 import com.orient.firecontrol_web_demo.config.password.AesCipherUtil;
 import com.orient.firecontrol_web_demo.config.shiro.UserRealm;
 import com.orient.firecontrol_web_demo.dao.organization.OrganDao;
@@ -55,7 +56,11 @@ public class UserService {
      * 单位领导管理员可以看到该部门下的人员信息
      * @return
      */
-    public PageBean<User>listUser(Integer currentPage,Integer pageSize){
+    public PageInfo<User> listUser(PageUtils pageUtils){
+        if (pageUtils.getPage()==null || pageUtils.getRows()==null){
+            pageUtils.setPage(1);
+            pageUtils.setRows(10);
+        }
         //取出当前登录的用户信息
         String account = JwtUtil.getClaim(SecurityUtils.getSubject().getPrincipals().toString(), Constant.ACCOUNT);
         Integer enable = userDao.findOneByAccount(account).getEnable();
@@ -68,22 +73,26 @@ public class UserService {
         Role role = byUser.get(0);
         Map<String,Object> map = new HashMap<>();
         if (role.getRoleName().equals("superadmin")){
-            PageHelper.startPage(currentPage,pageSize);
+            PageHelper.startPage(pageUtils.getPage(),pageUtils.getRows());
             List<User> all = userDao.findAll();
             //若是超级管理员  那么查询出的用户列表就是全部的人员信息
-            PageBean<User> pageBean = new PageBean<>(currentPage, pageSize, userDao.findAll().size());
-            pageBean.setItems(all);
-            return pageBean;
+            PageInfo<User> pageInfo = new PageInfo<>(all);
+            if(all.size()==0){
+                throw new CustomException("查询失败,当前数据库中无用户信息");
+            }
+            return pageInfo;
         }
         if (role.getRoleName().equals("admin")){
             //该角色是某单位的领导
             //需确定具体是哪个部门的领导  取出该账户下的organId
             Integer organId = userDao.findOneByAccount(account).getOrganId();
-            PageHelper.startPage(currentPage,pageSize);
+            PageHelper.startPage(pageUtils.getPage(),pageUtils.getRows());
             List<User> byOrganId = userDao.findByOrganId(organId);
-            PageBean<User> pageBean = new PageBean<>(currentPage, pageSize, userDao.findByOrganId(organId).size());
-            pageBean.setItems(byOrganId);
-            return pageBean;
+            PageInfo<User> pageInfo = new PageInfo<>(byOrganId);
+            if(byOrganId.size()==0){
+                throw new CustomException("查询失败,当前单位中无用户信息");
+            }
+            return pageInfo;
         }
         //因为在该controller接口 已经约定只有superadmin admin  才可以使用该接口   故别的角色暂时不做判断
         return null;

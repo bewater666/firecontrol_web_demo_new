@@ -1,11 +1,11 @@
 package com.orient.firecontrol_web_demo.controller.user;
 
+import com.github.pagehelper.PageInfo;
 import com.orient.firecontrol_web_demo.config.aop.MyLog;
 import com.orient.firecontrol_web_demo.config.exception.CustomException;
 import com.orient.firecontrol_web_demo.config.exception.CustomUnauthorizedException;
 import com.orient.firecontrol_web_demo.config.jwt.JwtUtil;
-import com.orient.firecontrol_web_demo.config.page.PageBean;
-import com.orient.firecontrol_web_demo.config.page.PageCommons;
+import com.orient.firecontrol_web_demo.config.page.PageUtils;
 import com.orient.firecontrol_web_demo.config.password.AesCipherUtil;
 import com.orient.firecontrol_web_demo.config.redis.JedisUtil;
 import com.orient.firecontrol_web_demo.dao.user.RoleDao;
@@ -24,6 +24,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -84,22 +85,18 @@ public class UserController {
      * superadmin admin权限   superadmin可以看全部人员信息 admin可以看自己部门下的人员讯息
      * @return
      */
-    @GetMapping("/view/{currentPage}/{pageSize}")
+    @GetMapping("/view")
     @RequiresRoles(value = {"superadmin","admin"},logical = Logical.OR)
     @ApiOperation(value = "用户管理接口",notes = "superadmin admin权限   superadmin可以看全部人员信息 admin可以看自己部门下的人员讯息")
 //    @MyLog(description = "用户管理")
-    public ResultBean listUser(@PathVariable("currentPage")@ApiParam(name = "currentPage",value = "当前页码",required = true) Integer currentPage,
-                               @PathVariable("pageSize")@ApiParam(name = "pageSize",value = "每页条数",required = true) Integer pageSize){
-        PageBean<User> pageBean = userService.listUser(currentPage, pageSize);
-        List<User> items = pageBean.getItems();
-        int thisPageNum = PageCommons.getThisPageNum(currentPage, pageSize, pageBean);
-        Map map = new HashMap();
-        map.put("currentPage",currentPage);
-        map.put("thisPageNum",thisPageNum);
-        map.put("totalNum", pageBean.getTotalNum());
-        map.put("userList",items);
+    public ResultBean listUser(@ModelAttribute @Validated PageUtils pageUtils){
+        PageInfo<User> pageInfo = userService.listUser(pageUtils);
+        Map<String,Object> map = new HashMap<>();
+        map.put("currentPage", pageUtils.getPage());
+        map.put("thisPageNum", pageInfo.getSize());
+        map.put("userList", pageInfo.getList());
+        map.put("totalNum", pageInfo.getTotal());
         return  new ResultBean(200,"查询成功",map);
-
     }
 
 

@@ -1,6 +1,7 @@
 package com.orient.firecontrol_web_demo.controller.device;
 
 import com.orient.firecontrol_web_demo.config.rabbit.SendCommand;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public class SendController {
      * @return
      */
     @GetMapping("/50/connect/{deviceCode}")
+    @RequiresAuthentication
     public String send50Connect(@PathVariable("deviceCode") String deviceCode){
         String msg = "eb90eb9002"+deviceCode.substring(0, 10)+"08005001"+deviceCode.substring(10, 16)+"0203";
         sendCommand.send50(msg);
@@ -41,6 +43,7 @@ public class SendController {
      * @return
      */
     @GetMapping("/50/break/{deviceCode}")
+    @RequiresAuthentication
     public String send50Break(@PathVariable("deviceCode") String deviceCode){
         String msg = "eb90eb9002"+deviceCode.substring(0, 10)+"08005001"+deviceCode.substring(10, 16)+"0103";
         sendCommand.send50(msg);
@@ -49,6 +52,7 @@ public class SendController {
 
 
     @GetMapping("/60")
+    @RequiresAuthentication
     public String send60(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = sdf.format(new Date());
