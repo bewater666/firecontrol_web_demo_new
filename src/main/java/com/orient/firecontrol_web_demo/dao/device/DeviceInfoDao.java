@@ -51,4 +51,35 @@ public interface DeviceInfoDao {
     List<DeviceInfo> findByBuildCodeAndFloorCode(@Param("buildCode") String buildCode,@Param("floorCode") Integer floorCode);
 
 
+    /**
+     * 统计全部单位各设备类型的数量
+     * 超级管理员使用  统计全部单位下的
+     * @param deviceType
+     * @return
+     */
+    int countByDeviceType(String deviceType);
+
+    /**
+     * 统计全部单位离线的各设备类型的数量
+     * 超级管理员使用
+     * @param deviceType
+     * @return
+     */
+    int countByDeviceTypeAndStatus(String deviceType);
+
+    /**
+     * 单位领导统计该单位下各设备类型的数量
+     * @param deviceType
+     * @param buildCode
+     * @return
+     */
+    int countByDeviceTypeAndOrgan(@Param("deviceType") String deviceType,@Param("buildCode") String buildCode);
+
+    /**
+     * 单位领导统计该单位下离线的各设备类型的数量
+     * @param deviceType
+     * @param buildCode
+     * @return
+     */
+    int countByDeviceTypeAndStatusAndOrgan(@Param("deviceType") String deviceType,@Param("buildCode") String buildCode);
 }

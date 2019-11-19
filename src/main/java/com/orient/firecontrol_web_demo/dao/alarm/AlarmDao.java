@@ -124,5 +124,45 @@ public interface AlarmDao {
      */
     List<AlarmCount> countOrganLast7Days(int organId);
 
+    /**
+     * 超级管理员统计全部单位已处理的告警数量
+     * @return
+     */
+    int countHasHandler();
+
+    /**
+     * 超级管理员统计全部单位未处理的告警数量
+     * @return
+     */
+    int countUnHandler();
+
+    /**
+     * 超级管理员统计全部单位处理失败的告警数量
+     * @return
+     */
+    int countHandlerBad();
+
+
+    /**
+     * 单位领导统计该单位下已处理告警数量
+     * @param organId
+     * @return
+     */
+    int countOrganHasHandler(Integer organId);
+
+
+    /**
+     * 单位领导统计该单位下未处理的告警数量
+     * @param organId
+     * @return
+     */
+    int countOrganUnHandler(Integer organId);
+
+    /**
+     * 单位领导统计该单位下处理失败的告警数量
+     * @param organId
+     * @return
+     */
+    int countOrganHandlerBad(Integer organId);
 
 }

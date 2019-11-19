@@ -42,4 +42,16 @@
         SELECT id,buildcode,devicecode,devicetype,devicename,status,floor_code,typename FROM tb_device
         WHERE buildcode = #{buildCode} AND floor_code = #{floorCode}
     </select>
+    <select id="countByDeviceType" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_device WHERE devicetype = #{deviceType}
+    </select>
+    <select id="countByDeviceTypeAndStatus" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_device WHERE devicetype = #{deviceType} AND status = '离线'
+    </select>
+    <select id="countByDeviceTypeAndOrgan" resultType="java.lang.Integer">
+         SELECT COUNT(*) FROM tb_device WHERE devicetype = #{deviceType} AND buildcode = #{buildCode}
+    </select>
+    <select id="countByDeviceTypeAndStatusAndOrgan" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_device WHERE devicetype = #{deviceType} AND buildcode = #{buildCode} AND status = '离线'
+    </select>
 </mapper>

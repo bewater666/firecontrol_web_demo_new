@@ -128,4 +128,24 @@
     </select>
 
 
+    <select id="countHasHandler" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_alarm WHERE ishandler = '已处理'
+    </select>
+    <select id="countUnHandler" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_alarm WHERE ishandler = '未处理'
+    </select>
+    <select id="countHandlerBad" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_alarm WHERE ishandler = '处理失败'
+    </select>
+    <select id="countOrganHasHandler" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_alarm WHERE ishandler = '已处理' AND organ_id = #{organId}
+    </select>
+    <select id="countOrganUnHandler" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_alarm WHERE ishandler = '未处理' AND organ_id = #{organId}
+    </select>
+    <select id="countOrganHandlerBad" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tb_alarm WHERE ishandler = '处理失败' AND organ_id = #{organId}
+    </select>
+
+
 </mapper>
