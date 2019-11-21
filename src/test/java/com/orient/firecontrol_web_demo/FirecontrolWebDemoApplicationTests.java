@@ -5,20 +5,15 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class FirecontrolWebDemoApplicationTests {
 
     @Test
     public void contextLoads() {
-        Set<String> strings = new HashSet<>();
-        strings.add("1");
-        strings.add("1");
-        strings.add("1");
-        System.out.println(strings);
+        String msg  = "你好";
+        String substring = msg.substring(0);
+        System.out.println(substring);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.orient.firecontrol_web_demo.controller.device;
 
 import com.orient.firecontrol_web_demo.config.rabbit.SendCommand;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/send")
+@Slf4j
 public class SendController {
     @Autowired
     private SendCommand sendCommand;
@@ -32,8 +34,12 @@ public class SendController {
     @GetMapping("/50/connect/{deviceCode}")
     @RequiresAuthentication
     public String send50Connect(@PathVariable("deviceCode") String deviceCode){
+        log.info("===开始下发闭合指令===");
         String msg = "eb90eb9002"+deviceCode.substring(0, 10)+"08005001"+deviceCode.substring(10, 16)+"0203";
+        System.out.println("需要合上的设备==="+deviceCode);
+        System.out.println("发送的指令为==="+msg);
         sendCommand.send50(msg);
+        log.info("===连接指令发送成功===");
         return "SEND OK!!!";
     }
 
@@ -45,8 +51,12 @@ public class SendController {
     @GetMapping("/50/break/{deviceCode}")
     @RequiresAuthentication
     public String send50Break(@PathVariable("deviceCode") String deviceCode){
+        log.info("===开始下发断开指令===");
         String msg = "eb90eb9002"+deviceCode.substring(0, 10)+"08005001"+deviceCode.substring(10, 16)+"0103";
+        System.out.println("需要断开的设备==="+deviceCode);
+        System.out.println("发送的指令为==="+msg);
         sendCommand.send50(msg);
+        log.info("===断开指令发送成功===");
         return "SEND OK!!!";
     }
 
