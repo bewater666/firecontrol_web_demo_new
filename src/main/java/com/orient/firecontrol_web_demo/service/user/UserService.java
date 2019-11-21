@@ -26,9 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author bewater
@@ -71,7 +69,6 @@ public class UserService {
         List<Role> byUser = roleDao.findByUser(account);
         //因为在该项目中  我一个账号只设置了一个角色  故byUser这个list中就一个角色 取第一个就好
         Role role = byUser.get(0);
-        Map<String,Object> map = new HashMap<>();
         if (role.getRoleName().equals("superadmin")){
             PageHelper.startPage(pageUtils.getPage(),pageUtils.getRows());
             List<User> all = userDao.findAll();

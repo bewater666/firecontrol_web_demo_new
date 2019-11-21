@@ -13,7 +13,9 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author bewater
@@ -37,15 +39,18 @@ public class OrganService {
     public ResultBean organView(){
         String account = JwtUtil.getClaim(SecurityUtils.getSubject().getPrincipals().toString(), Constant.ACCOUNT); //获得当前登录的用户
         List<Role> byUser = roleDao.findByUser(account);
+        Map<String,Object> map = new HashMap<>();
         for (Role role:
         byUser) {
             if (role.getRoleName().equals("superadmin")){ //若是角色是超级管理员 则显示全部的单位信息
                 List<Organization> organizations = organDao.listAll();
-                return new ResultBean(200, "查询成功",organizations);
+                map.put("organList", organizations);
+                return new ResultBean(200, "查询成功",map);
             }
             if (role.getRoleName().equals("admin")){  //若角色是某个单位的领导  则显示自己管辖的单位信息
                 Organization byAccount = organDao.findByAccount(account);
-                return new ResultBean(200, "查询成功",byAccount);
+                map.put("organList", byAccount);
+                return new ResultBean(200, "查询成功",map);
             }
         }
         return null;
