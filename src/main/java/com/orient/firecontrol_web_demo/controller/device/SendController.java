@@ -39,7 +39,7 @@ public class SendController {
         System.out.println("需要合上的设备==="+deviceCode);
         System.out.println("发送的指令为==="+msg);
         sendCommand.send50(msg);
-        log.info("===连接指令发送成功===");
+        log.info("===闭合指令发送成功===");
         return "SEND OK!!!";
     }
 

@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -225,6 +227,90 @@ public class DeviceService {
             List<Device03> device03s = device03Dao.listByDeviceCode(deviceCode);
             PageInfo pageInfo = new PageInfo(device03s);
             return pageInfo;
+        }
+        return null;
+    }
+
+    /**
+     * 查询某个设备最近7天的监测数据
+     * @param deviceCode
+     * @param deviceType
+     * @return
+     */
+    public ResultBean findLast7DaysMeasure(String deviceCode,String deviceType){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Map<String,Object> map = new HashMap<>();
+        if (deviceType.equals("01")){//主控设备
+            List<Device01> last7Days = device01Dao.findLast7Days(deviceCode);
+            List<String> voltageAList = new ArrayList<>();
+            List<String> voltageBList = new ArrayList<>();
+            List<String> voltageCList = new ArrayList<>();
+            List<String> remainElecList = new ArrayList<>();
+            List<String> boxTempList = new ArrayList<>();
+            List<String> timeList = new ArrayList<>();
+            for (Device01 device01:
+            last7Days) {
+                voltageAList.add(device01.getVoltageA());
+                voltageBList.add(device01.getVoltageB());
+                voltageCList.add(device01.getVoltageC());
+                remainElecList.add(device01.getRemainElec());
+                boxTempList.add(device01.getBoxTemp());
+                String format = simpleDateFormat.format(device01.getMeasureTime());
+                timeList.add(format);
+            }
+            map.put("voltageAList", voltageAList);
+            map.put("voltageBList", voltageBList);
+            map.put("voltageCList", voltageCList);
+            map.put("remainElecList", remainElecList);
+            map.put("boxTempList",boxTempList );
+            map.put("timeList", timeList);
+            return new ResultBean(200, "查询成功", map);
+        }
+        if (deviceType.equals("02")){//单相子机
+            List<Device02> last7Days = device02Dao.findLast7Days(deviceCode);
+            List<String> branchElecList = new ArrayList<>();
+            List<String> branchTempList = new ArrayList<>();
+            List<String> timeList = new ArrayList<>();
+            for (Device02 device02:
+            last7Days) {
+                branchElecList.add(device02.getBranchElec());
+                branchTempList.add(device02.getBranchTemp());
+                String format = simpleDateFormat.format(device02.getMeasureTime());
+                timeList.add(format);
+            }
+            map.put("branchElecList", branchElecList);
+            map.put("branchTempList", branchTempList);
+            map.put("timeList", timeList);
+            return new ResultBean(200, "查询成功", map);
+        }
+        if (deviceType.equals("03")){//三相子机
+            List<Device03> last7Days = device03Dao.findLast7Days(deviceCode);
+            List<String> branchElecAList = new ArrayList<>();
+            List<String> branchElecBList = new ArrayList<>();
+            List<String> branchElecCList = new ArrayList<>();
+            List<String> branchTempAList = new ArrayList<>();
+            List<String> branchTempBList = new ArrayList<>();
+            List<String> branchTempCList = new ArrayList<>();
+            List<String> timeList = new ArrayList<>();
+            for (Device03 device03:
+            last7Days) {
+                branchElecAList.add(device03.getBranchElecA());
+                branchElecBList.add(device03.getBranchElecB());
+                branchElecCList.add(device03.getBranchElecC());
+                branchTempAList.add(device03.getBranchTempA());
+                branchTempBList.add(device03.getBranchTempB());
+                branchTempCList.add(device03.getBranchTempC());
+                String format = simpleDateFormat.format(device03.getMeasureTime());
+                timeList.add(format);
+            }
+            map.put("branchElecAList", branchElecAList);
+            map.put("branchElecBList", branchElecBList);
+            map.put("branchElecCList", branchElecCList);
+            map.put("branchTempAList", branchTempAList);
+            map.put("branchTempBList", branchTempBList);
+            map.put("branchTempCList", branchTempCList);
+            map.put("timeList", timeList);
+            return new ResultBean(200, "查询成功", map);
         }
         return null;
     }

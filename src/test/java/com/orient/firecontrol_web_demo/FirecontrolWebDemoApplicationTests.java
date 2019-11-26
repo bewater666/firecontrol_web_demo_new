@@ -11,9 +11,7 @@ public class FirecontrolWebDemoApplicationTests {
 
     @Test
     public void contextLoads() {
-        String msg  = "你好";
-        String substring = msg.substring(0);
-        System.out.println(substring);
+
     }
 
 }

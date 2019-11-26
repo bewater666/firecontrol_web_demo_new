@@ -26,4 +26,10 @@
     </select>
 
 
+    <select id="findLast7Days" resultType="com.orient.firecontrol_web_demo.model.device.Device01">
+        SELECT id,deviceCode,voltageA,voltageB,voltageC,remainElec,boxTemp,measureTime FROM tb_device1_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+
+
 </mapper>

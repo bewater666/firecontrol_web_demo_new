@@ -27,4 +27,12 @@ public interface Device01Dao {
      * @return
      */
     List<Device01> listByDeviceCode(String deviceCode);
+
+
+    /**
+     * 查看某设备最近7天的检测数据
+     * @param deviceCode
+     * @return
+     */
+    List<Device01> findLast7Days(String deviceCode);
 }

@@ -281,13 +281,15 @@ public class UserService {
                 throw new CustomException("该账户名已存在,修改失败");
             }
         }
-        //修改密码 工号 职务的时候需要注意  默认用户的所属的单位id organId不可修改
-        // 密码以帐号+密码的形式进行AES加密
-        if (userUp.getPassword().length() > Constant.PASSWORD_MAX_LEN) {
-            throw new CustomException("密码不得超过8位");
+        if (userUp.getPassword()!=null){
+            //修改密码 工号 职务的时候需要注意  默认用户的所属的单位id organId不可修改
+            // 密码以帐号+密码的形式进行AES加密
+            if (userUp.getPassword().length() > Constant.PASSWORD_MAX_LEN) {
+                throw new CustomException("密码不得超过8位");
+            }
+            String key = AesCipherUtil.enCrypto(userUp.getAccount() + userUp.getPassword());
+            userUp.setPassword(key);
         }
-        String key = AesCipherUtil.enCrypto(userUp.getAccount() + userUp.getPassword());
-        userUp.setPassword(key);
         //修改工号  工号在单位中不允许重复
         //获取要修改的用户的单位id
         Integer organId = byUserId.getOrganId();

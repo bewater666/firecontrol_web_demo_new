@@ -17,4 +17,9 @@
         SELECT id,deviceCode,branchElec,branchTemp,measureTime FROM tb_device2_measure
         WHERE deviceCode = #{deviceCode} order By id DESC
     </select>
+
+    <select id="findLast7Days" resultType="com.orient.firecontrol_web_demo.model.device.Device02">
+        SELECT id,deviceCode,branchElec,branchTemp,measureTime FROM tb_device2_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
 </mapper>

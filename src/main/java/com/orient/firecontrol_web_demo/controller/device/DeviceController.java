@@ -136,4 +136,18 @@ public class DeviceController {
 
     }
 
+    /**
+     * 查询某设备最近7天的监控数据  用于前端画曲线图
+     * @param deviceCode
+     * @param deviceType
+     * @return
+     */
+    @ApiOperation(value = "查询某设备最近7天的监控数据",notes = "查询某设备最近7天的监控数据")
+    @GetMapping("/last7Measure")
+    @RequiresRoles(value = {"superadmin","admin"},logical = Logical.OR)
+    public ResultBean findLast7DaysMeasure(@ApiParam(value = "设备编号",name = "deviceCode",required = true)@RequestParam("deviceCode") String deviceCode,
+                                           @ApiParam(value = "设备类型",name = "deviceType",required = true)@RequestParam("deviceType") String deviceType){
+        return deviceService.findLast7DaysMeasure(deviceCode, deviceType);
+    }
+
 }
