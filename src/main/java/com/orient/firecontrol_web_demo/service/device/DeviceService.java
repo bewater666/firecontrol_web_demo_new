@@ -241,13 +241,17 @@ public class DeviceService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String,Object> map = new HashMap<>();
         if (deviceType.equals("01")){//主控设备
+            long l = System.currentTimeMillis();
             List<Device01> last7Days = device01Dao.findLast7Days(deviceCode);
+            long l1 = System.currentTimeMillis();
+            System.out.println("执行查询消耗的时间==="+String.valueOf(l1-l));
             List<String> voltageAList = new ArrayList<>();
             List<String> voltageBList = new ArrayList<>();
             List<String> voltageCList = new ArrayList<>();
             List<String> remainElecList = new ArrayList<>();
             List<String> boxTempList = new ArrayList<>();
             List<String> timeList = new ArrayList<>();
+            long l2 = System.currentTimeMillis();
             for (Device01 device01:
             last7Days) {
                 voltageAList.add(device01.getVoltageA());
@@ -258,6 +262,8 @@ public class DeviceService {
                 String format = simpleDateFormat.format(device01.getMeasureTime());
                 timeList.add(format);
             }
+            long l3 = System.currentTimeMillis();
+            System.out.println("执行for循环消耗的时间==="+String.valueOf(l3-l2));
             map.put("voltageAList", voltageAList);
             map.put("voltageBList", voltageBList);
             map.put("voltageCList", voltageCList);
