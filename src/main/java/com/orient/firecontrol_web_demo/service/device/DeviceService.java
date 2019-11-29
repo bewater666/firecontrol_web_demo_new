@@ -22,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author bewater
@@ -273,10 +270,14 @@ public class DeviceService {
             return new ResultBean(200, "查询成功", map);
         }
         if (deviceType.equals("02")){//单相子机
+            long l = System.currentTimeMillis();
             List<Device02> last7Days = device02Dao.findLast7Days(deviceCode);
+            long l1 = System.currentTimeMillis();
+            System.out.println("执行查询消耗的时间==="+String.valueOf(l1-l));
             List<String> branchElecList = new ArrayList<>();
             List<String> branchTempList = new ArrayList<>();
             List<String> timeList = new ArrayList<>();
+            long l2 = System.currentTimeMillis();
             for (Device02 device02:
             last7Days) {
                 branchElecList.add(device02.getBranchElec());
@@ -284,13 +285,18 @@ public class DeviceService {
                 String format = simpleDateFormat.format(device02.getMeasureTime());
                 timeList.add(format);
             }
+            long l3 = System.currentTimeMillis();
+            System.out.println("执行for循环消耗的时间==="+String.valueOf(l3-l2));
             map.put("branchElecList", branchElecList);
             map.put("branchTempList", branchTempList);
             map.put("timeList", timeList);
             return new ResultBean(200, "查询成功", map);
         }
         if (deviceType.equals("03")){//三相子机
+            long l = System.currentTimeMillis();
             List<Device03> last7Days = device03Dao.findLast7Days(deviceCode);
+            long l1 = System.currentTimeMillis();
+            System.out.println("执行查询消耗的时间==="+String.valueOf(l1-l));
             List<String> branchElecAList = new ArrayList<>();
             List<String> branchElecBList = new ArrayList<>();
             List<String> branchElecCList = new ArrayList<>();
@@ -298,6 +304,7 @@ public class DeviceService {
             List<String> branchTempBList = new ArrayList<>();
             List<String> branchTempCList = new ArrayList<>();
             List<String> timeList = new ArrayList<>();
+            long l2 = System.currentTimeMillis();
             for (Device03 device03:
             last7Days) {
                 branchElecAList.add(device03.getBranchElecA());
@@ -309,6 +316,8 @@ public class DeviceService {
                 String format = simpleDateFormat.format(device03.getMeasureTime());
                 timeList.add(format);
             }
+            long l3 = System.currentTimeMillis();
+            System.out.println("执行for循环消耗的时间==="+String.valueOf(l3-l2));
             map.put("branchElecAList", branchElecAList);
             map.put("branchElecBList", branchElecBList);
             map.put("branchElecCList", branchElecCList);
@@ -319,6 +328,164 @@ public class DeviceService {
             return new ResultBean(200, "查询成功", map);
         }
         return null;
+    }
+
+    /**
+     * 用于紫东园区 生命科创园插入假数据
+     * @param deviceCode
+     * @return
+     */
+    public ResultBean insertFakeData(String deviceCode){
+        DeviceInfo one = deviceInfoDao.findOne(deviceCode);
+        if (one.getDeviceType().equals("01")){//主控设备
+            String voltageA = String.valueOf(new Random().nextDouble()*(220.00-215.00)+215.00).substring(0, 6);
+            String voltageB = String.valueOf(new Random().nextDouble()*(220.00-215.00)+215.00).substring(0, 6);
+            String voltageC = String.valueOf(new Random().nextDouble()*(220.00-215.00)+215.00).substring(0, 6);
+            String remainElec = String.valueOf(new Random().nextDouble()*(0.18-0.15)+0.15).substring(0, 4);
+            String boxTemp = String.valueOf(new Random().nextDouble()*(15.8-15.4)+15.4).substring(0, 4);
+            Date date = new Date();
+            Device01 device01 = new Device01();
+            device01.setVoltageA(voltageA).setVoltageB(voltageB).setVoltageC(voltageC).setRemainElec(remainElec)
+                    .setBoxTemp(boxTemp).setMeasureTime(date).setDeviceCode(deviceCode);
+            device01Dao.insertDevice01Measure(device01);
+            return new ResultBean(200, "主控设备假数据插入成功", null);
+        }
+        if (one.getDeviceType().equals("02")){//单相子机
+            String branchElec = String.valueOf(new Random().nextDouble()*(0.29-0.25)+0.25).substring(0, 4);
+            String branchTemp = String.valueOf(new Random().nextDouble()*(15.8-15.4)+15.4).substring(0, 4);
+            Date date = new Date();
+            Device02 device02 = new Device02();
+            device02.setDeviceCode(deviceCode).setBranchTemp(branchTemp).setBranchElec(branchElec).setMeasureTime(date);
+            device02Dao.insertDevice02Measure(device02);
+            return new ResultBean(200, "单相子机设备假数据插入成功", null);
+        }
+        if (one.getDeviceType().equals("03")){//三相子机
+            String branchElecA = String.valueOf(new Random().nextDouble()*(0.38-0.37)+0.37).substring(0, 4);
+            String branchElecB = String.valueOf(new Random().nextDouble()*(0.28-0.27)+0.27).substring(0, 4);
+            String branchElecC = String.valueOf(new Random().nextDouble()*(0.30-0.29)+0.29).substring(0, 4);
+            String branchTempA = String.valueOf(new Random().nextDouble()*(15.8-15.4)+15.4).substring(0, 4);
+            String branchTempB = String.valueOf(new Random().nextDouble()*(15.8-15.4)+15.4).substring(0, 4);
+            String branchTempC = String.valueOf(new Random().nextDouble()*(15.8-15.4)+15.4).substring(0, 4);
+            Date date = new Date();
+            Device03 device03 = new Device03();
+            device03.setDeviceCode(deviceCode).setBranchElecA(branchElecA).setBranchElecB(branchElecB).setBranchElecC(branchElecC)
+                    .setBranchTempA(branchTempA).setBranchTempB(branchTempB).setBranchTempC(branchTempC).setMeasureTime(date);
+            device03Dao.insertDevice03Measure(device03);
+            return new ResultBean(200, "三相子机设备假数据插入成功", null);
+        }
+
+        return null;
+    }
+
+
+    /**
+     * 查询某设备 最近7天 某一项数据最近7天的监控数据
+     * 用于前端画折线图
+     * @param deviceCode
+     * @param button
+     * @return
+     */
+    public ResultBean drawLast7DaysGraph(String deviceCode,String button){
+        DeviceInfo one = deviceInfoDao.findOne(deviceCode);
+        if (one==null){
+            return new ResultBean(201, "该设备不存在", null);
+        }
+        if (one.getDeviceType().equals("01")){ //主控设备
+            List<Object> last7DaysMeasureTime = device01Dao.findLast7DaysMeasureTime(deviceCode);
+            Map<String,Object> map = new HashMap<>();
+            //需要展示5组数据 配电箱环境温度 剩余电流 A相电压 B相电压 C相电压
+            if (button.equals("配电箱环境温度")){
+                List<Object> last7DaysBoxTemp = device01Dao.findLast7DaysBoxTemp(deviceCode);
+                map.put("dataList", last7DaysBoxTemp);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询主控设备最近7天配电箱环境温度监测数据成功", map);
+            }
+            if (button.equals("剩余电流")){
+                List<Object> last7DaysRemainElec = device01Dao.findLast7DaysRemainElec(deviceCode);
+                map.put("dataList", last7DaysRemainElec);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询主控设备最近7天剩余电流监测数据成功", map);
+            }
+            if (button.equals("A相电压")){
+                List<Object> last7DaysVoltageA = device01Dao.findLast7DaysVoltageA(deviceCode);
+                map.put("dataList", last7DaysVoltageA);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询主控设备最近7天A相电压监测数据成功", map);
+            }
+            if (button.equals("B相电压")){
+                List<Object> last7DaysVoltageB = device01Dao.findLast7DaysVoltageB(deviceCode);
+                map.put("dataList", last7DaysVoltageB);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询主控设备最近7天B相电压监测数据成功", map);
+            }
+            if (button.equals("C相电压")){
+                List<Object> last7DaysVoltageC = device01Dao.findLast7DaysVoltageC(deviceCode);
+                map.put("dataList", last7DaysVoltageC);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询主控设备最近7天C相电压监测数据成功", map);
+            }
+        }
+
+        if(one.getDeviceType().equals("02")){ //单相子机
+            //需要展示2组数据  支路电流   支路接头温度
+            List<Object> last7DaysMeasureTime = device02Dao.findLast7DaysMeasureTime(deviceCode);
+            Map<String,Object> map = new HashMap<>();
+            if (button.equals("支路电流")){
+                List<Object> last7DaysBranchElec = device02Dao.findLast7DaysBranchElec(deviceCode);
+                map.put("dataList", last7DaysBranchElec);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询单相子机最近7天支路电流监测数据成功", map);
+            }
+            if (button.equals("支路接头温度")){
+                List<Object> last7DaysBranchTemp = device02Dao.findLast7DaysBranchTemp(deviceCode);
+                map.put("dataList", last7DaysBranchTemp);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询单相子机最近7天支路接头温度监测数据成功", map);
+            }
+        }
+
+        if (one.getDeviceType().equals("03")){  //三相子机
+            //需要展示6组数据  支路A相电流  支路B相电流 支路C相电流  支路A相接头温度  支路B相接头温度  支路C相接头温度
+            List<Object> last7DaysMeasureTime = device03Dao.findLast7DaysMeasureTime(deviceCode);
+            Map<String,Object> map = new HashMap<>();
+            if (button.equals("支路A相电流")){
+                List<Object> last7DaysBranchElecA = device03Dao.findLast7DaysBranchElecA(deviceCode);
+                map.put("dataList", last7DaysBranchElecA);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询三相子机最近7天支路A相电流监测数据成功", map);
+            }
+            if (button.equals("支路B相电流")){
+                List<Object> last7DaysBranchElecB = device03Dao.findLast7DaysBranchElecB(deviceCode);
+                map.put("dataList", last7DaysBranchElecB);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询三相子机最近7天支路B相电流监测数据成功", map);
+            }
+            if (button.equals("支路C相电流")){
+                List<Object> last7DaysBranchElecC = device03Dao.findLast7DaysBranchElecC(deviceCode);
+                map.put("dataList", last7DaysBranchElecC);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询三相子机最近7天支路C相电流监测数据成功", map);
+            }
+            if (button.equals("支路A相接头温度")){
+                List<Object> last7DaysBranchTempA = device03Dao.findLast7DaysBranchTempA(deviceCode);
+                map.put("dataList", last7DaysBranchTempA);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询三相子机最近7天支路A相接头温度监测数据成功", map);
+            }
+            if (button.equals("支路B相接头温度")){
+                List<Object> last7DaysBranchTempB = device03Dao.findLast7DaysBranchTempB(deviceCode);
+                map.put("dataList", last7DaysBranchTempB);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询三相子机最近7天支路B相接头温度监测数据成功", map);
+            }
+            if (button.equals("支路C相接头温度")){
+                List<Object> last7DaysBranchTempC = device03Dao.findLast7DaysBranchTempC(deviceCode);
+                map.put("dataList", last7DaysBranchTempC);
+                map.put("timeList", last7DaysMeasureTime);
+                return new ResultBean(200, "查询三相子机最近7天支支路C相接头温度监测数据成功", map);
+            }
+        }
+        return new ResultBean(201, "查询失败,请检查参数");
     }
 
 }

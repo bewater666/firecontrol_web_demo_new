@@ -28,4 +28,33 @@
         SELECT id,deviceCode,branchElecA,branchElecB,branchElecC,branchTempA,branchTempB,branchTempC,measureTime FROM tb_device3_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
         AND deviceCode = #{deviceCode}
     </select>
+    <select id="findLast7DaysBranchElecA" resultType="java.lang.Object">
+        SELECT branchElecA FROM tb_device3_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysBranchElecB" resultType="java.lang.Object">
+        SELECT branchElecB FROM tb_device3_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysBranchElecC" resultType="java.lang.Object">
+        SELECT branchElecC FROM tb_device3_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysBranchTempA" resultType="java.lang.Object">
+        SELECT branchTempA FROM tb_device3_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysBranchTempB" resultType="java.lang.Object">
+        SELECT branchTempB FROM tb_device3_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysBranchTempC" resultType="java.lang.Object">
+        SELECT branchTempC FROM tb_device3_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysMeasureTime" resultType="java.lang.Object">
+        SELECT measureTime FROM tb_device3_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+
 </mapper>

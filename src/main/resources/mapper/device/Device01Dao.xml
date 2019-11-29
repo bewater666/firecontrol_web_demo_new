@@ -31,5 +31,30 @@
         AND deviceCode = #{deviceCode}
     </select>
 
+    <select id="findLast7DaysVoltageA" resultType="java.lang.Object">
+        SELECT voltageA FROM tb_device1_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysVoltageB" resultType="java.lang.Object">
+        SELECT voltageB FROM tb_device1_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysVoltageC" resultType="java.lang.Object">
+        SELECT voltageC FROM tb_device1_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysRemainElec" resultType="java.lang.Object">
+        SELECT remainElec FROM tb_device1_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysBoxTemp" resultType="java.lang.Object">
+        SELECT boxTemp FROM tb_device1_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+    <select id="findLast7DaysMeasureTime" resultType="java.lang.Object">
+        SELECT measureTime FROM tb_device1_measure where DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(measureTime)
+        AND deviceCode = #{deviceCode}
+    </select>
+
 
 </mapper>

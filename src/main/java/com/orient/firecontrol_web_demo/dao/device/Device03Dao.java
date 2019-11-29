@@ -31,4 +31,57 @@ public interface Device03Dao {
      * @return
      */
     List<Device03> findLast7Days(String deviceCode);
+
+    /**
+     * 查看设备类型3最近7天的A相支路电流监测数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysBranchElecA(String deviceCode);
+
+
+    /**
+     * 查看设备类型3最近7天的B相支路电流监测数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysBranchElecB(String deviceCode);
+
+
+    /**
+     * 查看设备类型3最近7天的C相支路电流监测数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysBranchElecC(String deviceCode);
+
+    /**
+     * 查看设备类型3最近7天的A相支路接头温度监测数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysBranchTempA(String deviceCode);
+
+    /**
+     * 查看设备类型3最近7天的A相支路接头温度监测数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysBranchTempB(String deviceCode);
+
+
+    /**
+     * 查看设备类型3最近7天的A相支路接头温度监测数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysBranchTempC(String deviceCode);
+
+
+    /**
+     * 查看设备类型3最近7天的监测时间数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysMeasureTime(String deviceCode);
 }

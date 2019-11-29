@@ -150,4 +150,19 @@ public class DeviceController {
         return deviceService.findLast7DaysMeasure(deviceCode, deviceType);
     }
 
+
+    @PostMapping("/insertFake")
+    public ResultBean insertFakeDate(String deviceCode){
+        return deviceService.insertFakeData(deviceCode);
+    }
+
+
+    @GetMapping("/drawGraph")
+    @RequiresRoles(value = {"superadmin","admin"},logical = Logical.OR)
+    @ApiOperation(value = "查询某设备 最近7天 某一项数据最近7天的监控数据",notes = "查询某设备 最近7天 某一项数据最近7天的监控数据")
+    public ResultBean drawLast7DaysGraph(@RequestParam@ApiParam(name = "deviceCode",value = "设备编号",required = true) String deviceCode,
+                                         @RequestParam@ApiParam(name = "button",value = "按钮对应的值",required = true) String button){
+        return deviceService.drawLast7DaysGraph(deviceCode, button);
+    }
+
 }

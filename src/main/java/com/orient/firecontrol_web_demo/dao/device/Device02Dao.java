@@ -31,4 +31,26 @@ public interface Device02Dao {
      * @return
      */
     List<Device02> findLast7Days(String deviceCode);
+
+    /**
+     * 查看设备类型2 最近7天的支路电流监测数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysBranchElec(String deviceCode);
+
+
+    /**
+     * 查看设备类型2 最近7天的支路接头温度监测数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysBranchTemp(String deviceCode);
+
+    /**
+     * 查看设备类型2 最近7天的监控时间数据
+     * @param deviceCode
+     * @return
+     */
+    List<Object> findLast7DaysMeasureTime(String deviceCode);
 }
