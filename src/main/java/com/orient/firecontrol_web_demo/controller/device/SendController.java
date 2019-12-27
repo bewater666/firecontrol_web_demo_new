@@ -71,4 +71,6 @@ public class SendController {
         sendCommand.send60(msg);
         return "SEND OK!!!";
     }
+
+
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.orient.firecontrol_web_demo.dao.job.JobAndTriggerMapper">
+
+
+    <select id="getJobAndTriggerDetails" resultType="com.orient.firecontrol_web_demo.model.job.JobAndTrigger">
+        SELECT
+				qrtz_job_details.JOB_NAME,
+				qrtz_job_details.JOB_GROUP,
+				qrtz_job_details.JOB_CLASS_NAME,
+				qrtz_triggers.TRIGGER_NAME,
+				qrtz_triggers.TRIGGER_STATE,
+				qrtz_triggers.TRIGGER_GROUP,
+				qrtz_cron_triggers.CRON_EXPRESSION,
+				qrtz_cron_triggers.TIME_ZONE_ID
+			FROM
+				qrtz_job_details
+			left JOIN qrtz_triggers ON qrtz_triggers.JOB_GROUP = qrtz_job_details.JOB_GROUP
+			left JOIN qrtz_cron_triggers ON qrtz_cron_triggers.TRIGGER_GROUP = qrtz_triggers.TRIGGER_GROUP
+    </select>
+
+    <select id="getByJobClassNameAndJobGroupName"
+            resultType="com.orient.firecontrol_web_demo.model.job.JobAndTrigger">
+		SELECT
+				qrtz_job_details.JOB_NAME,
+				qrtz_job_details.JOB_GROUP,
+				qrtz_job_details.JOB_CLASS_NAME,
+				qrtz_triggers.TRIGGER_NAME,
+				qrtz_triggers.TRIGGER_STATE,
+				qrtz_triggers.TRIGGER_GROUP,
+				qrtz_cron_triggers.CRON_EXPRESSION,
+				qrtz_cron_triggers.TIME_ZONE_ID
+			FROM
+				qrtz_job_details
+			left JOIN qrtz_triggers ON qrtz_triggers.JOB_GROUP = qrtz_job_details.JOB_GROUP
+			left JOIN qrtz_cron_triggers ON qrtz_cron_triggers.TRIGGER_GROUP = qrtz_triggers.TRIGGER_GROUP
+		WHERE qrtz_job_details.JOB_NAME = #{jobClassName} AND qrtz_job_details.JOB_GROUP = #{jobGroupName}
+	</select>
+</mapper>
