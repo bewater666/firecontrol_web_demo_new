@@ -13,12 +13,12 @@ import java.util.List;
  */
 @Data
 public class ReScheduleDto {
-    @ApiModelProperty(name = "jobClassName",value = "connectJob还是breakJob",example = "closeJob",required = true)
+    @ApiModelProperty(name = "jobClassName",value = "connectJob还是breakJob",example = "connectJob",required = true)
     private String jobClassName;
     @ApiModelProperty(name = "jobGroupName",value = "任务调度名称",example = "南京办公室-南京办公室-5楼-测试调度1",required = true)
     private String jobGroupName;
     @ApiModelProperty(name = "cronExpression",value = "重新设置cron表达式",example = "0 0 10 * * ?",required = true)
     private String cronExpression;
-    @ApiModelProperty(name = "deviceCodeList",value = "重新设置要进行任务调度设备",example = "[3201130001010000,3201130001010002]",required = true)
+    @ApiModelProperty(name = "deviceCodeList",value = "重新设置要进行任务调度设备",required = true)
     private List<String> deviceCodeList;
 }

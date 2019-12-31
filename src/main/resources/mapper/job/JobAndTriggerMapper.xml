@@ -36,4 +36,33 @@
 			left JOIN qrtz_cron_triggers ON qrtz_cron_triggers.TRIGGER_GROUP = qrtz_triggers.TRIGGER_GROUP
 		WHERE qrtz_job_details.JOB_NAME = #{jobClassName} AND qrtz_job_details.JOB_GROUP = #{jobGroupName}
 	</select>
+
+	<select id="getByFlag" resultType="com.orient.firecontrol_web_demo.model.job.JobAndTrigger">
+		SELECT
+				qrtz_job_details.JOB_NAME,
+				qrtz_job_details.JOB_GROUP,
+				qrtz_job_details.JOB_CLASS_NAME,
+				qrtz_triggers.TRIGGER_NAME,
+				qrtz_triggers.TRIGGER_STATE,
+				qrtz_triggers.TRIGGER_GROUP,
+				qrtz_cron_triggers.CRON_EXPRESSION,
+				qrtz_cron_triggers.TIME_ZONE_ID
+			FROM
+				qrtz_job_details
+			left JOIN qrtz_triggers ON qrtz_triggers.JOB_GROUP = qrtz_job_details.JOB_GROUP
+			left JOIN qrtz_cron_triggers ON qrtz_cron_triggers.TRIGGER_GROUP = qrtz_triggers.TRIGGER_GROUP
+		WHERE qrtz_job_details.JOB_GROUP like #{flag}
+	</select>
+
+	<select id="getJobDetail" resultType="com.orient.firecontrol_web_demo.model.job.JobDetail">
+		SELECT
+				qrtz_triggers.JOB_NAME,
+				qrtz_triggers.NEXT_FIRE_TIME,
+				qrtz_triggers.PREV_FIRE_TIME,
+				qrtz_triggers.START_TIME,
+				qrtz_triggers.TRIGGER_STATE
+			FROM
+				qrtz_triggers
+		WHERE qrtz_triggers.JOB_NAME = #{jobClassName} AND qrtz_triggers.JOB_GROUP = #{jobGroupName}
+	</select>
 </mapper>

@@ -1,4 +1,4 @@
-package com.orient.firecontrol_web_demo.config.job;
+package com.orient.firecontrol_web_demo.service.job;
 
 import com.orient.firecontrol_web_demo.config.rabbit.SendCommand;
 import com.orient.firecontrol_web_demo.dao.job.BaseJob;
@@ -6,7 +6,9 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -15,11 +17,20 @@ import java.util.List;
  * @date 2019/12/26 16:32
  * @func
  */
+@Component
 public class BreakJob implements BaseJob {
     @Autowired
     SendCommand sendCommand;
 
     public BreakJob() {
+    }
+    public static BreakJob breakJob;
+
+    @PostConstruct
+    public void init(){
+        breakJob = this;
+        breakJob.sendCommand = this.sendCommand;
+        //初使化时将已静态化的sendCommand实例化
     }
 
     @Override
@@ -32,7 +43,7 @@ public class BreakJob implements BaseJob {
         JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
         JobDataMap triggerMap = jobExecutionContext.getTrigger().getJobDataMap();
         List<String> deviceCodes = null;
-        if (triggerMap==null){
+        if (triggerMap.size()==0){
             deviceCodes = (List<String>) jobDataMap.get("deviceList");
         }else{
             deviceCodes = (List<String>) triggerMap.get("deviceList");
@@ -40,7 +51,7 @@ public class BreakJob implements BaseJob {
         for (String deviceCode:
                 deviceCodes) {
             String msg = "eb90eb9002"+deviceCode.substring(0, 10)+"08005001"+deviceCode.substring(10, 16)+"0103";
-            sendCommand.send50(msg);
+            breakJob.sendCommand.send50(msg);
         }
     }
 }

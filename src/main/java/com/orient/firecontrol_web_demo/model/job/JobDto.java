@@ -27,6 +27,6 @@ public class JobDto {
     private String jobGroupName;
     @ApiModelProperty(name = "cronExpression",value = "cron表达式",example = "0 0 10 * * ?",required = true)
     private String cronExpression;
-    @ApiModelProperty(name = "deviceCodeList",value = "设备code",example = "[3201130001010000,3201130001010001]",required = true)
+    @ApiModelProperty(name = "deviceCodeList",value = "设备code",required = true)
     private List<String> deviceCodeList;
 }
