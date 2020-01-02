@@ -258,7 +258,8 @@ public class JobAndTriggerService {
             //若operateDeviceCodeList最终结果变成了空 则表示想修改的和原来一样 则和原来一样处理 dataMap不用变 否则传递新的JobDataMap 并dataMap也进行替换
             if (operateDeviceCodeList.size()==0){ //deviceCodeList不变 修改cron表达式即可
                 //原先如果deviceCodeList不变不用再向trigger传递JobDataMap 但是好像不行只有第一次修改成功 现在修改成每次都传 传之前清空 该操作前面已经做了
-
+                //第一次修改成功是因为trigger里面没有JobDataMap所以第一次成功了 第二次修改的时候可能里面已经有了 需要将他清掉 这个机制我还是没搞清楚
+                //不过不用担心 这个JobDataMap clear掉对其他调度造成影响  因为一个任务调度对应一个trigger 修改之前清掉再往里面加JobDataMap就是了 不改就不会清 所以不会有影响
                 // 按新的cronExpression表达式重新构建trigger
                 trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).usingJobData(updateJobDataMap).build();
             }else{//deviceCodeList变了 传递新的JobDataMap(通过trigger传递) 更改redis中的dataMap
