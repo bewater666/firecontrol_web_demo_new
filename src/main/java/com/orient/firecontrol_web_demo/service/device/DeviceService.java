@@ -100,7 +100,8 @@ public class DeviceService {
     public PageInfo<DeviceInfo> findByBuildId(PageUtils pageUtils, Integer buildingId){
         if (pageUtils.getPage()==null || pageUtils.getRows()==null){
             pageUtils.setPage(1);
-            pageUtils.setRows(10);
+            //这里分页做了修改 假如不传页码和每页数目 我仅这个接口 查询建筑下的设备列表 因为一个建筑物下没超过500 所以我就偷个懒了
+            pageUtils.setRows(500);
         }
         BuildingInfo byId = buildingDao.findById(buildingId);
         if (byId==null){
@@ -486,6 +487,22 @@ public class DeviceService {
             }
         }
         return new ResultBean(201, "查询失败,请检查参数");
+    }
+
+    /**
+     * 根据一个设备code查询所属的该单位该建筑物下该楼层下所有的设备列表
+     * @param deviceCode
+     * @return
+     */
+    public ResultBean getDeviceListByOneDeviceCode(String deviceCode){
+        DeviceInfo one = deviceInfoDao.getOne(deviceCode);
+        if (one==null){
+            throw new CustomException("该设备code不存在");
+        }
+        String buildCode = one.getBuildCode();
+        Integer floorCode = one.getFloorCode();
+        List<DeviceInfo> byBuildCodeAndFloorCode = deviceInfoDao.findByBuildCodeAndFloorCode(buildCode, floorCode);
+        return new ResultBean(200, "查询成功", byBuildCodeAndFloorCode);
     }
 
 }

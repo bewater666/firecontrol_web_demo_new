@@ -71,4 +71,6 @@ public class BuildingController {
         return buildingService.updateBuild(buildingInfoUp);
     }
 
+
+
 }

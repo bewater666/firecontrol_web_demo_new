@@ -168,13 +168,12 @@ public class JobAndTriggerService {
             return new ResultBean(200, "新建任务调度成功");
 
         }catch (ObjectAlreadyExistsException e){
-            System.out.println("任务调度名称已存在,请重新输入");
+            return new ResultBean(201,"任务调度名称已存在,请重新输入");
         }
         catch (SchedulerException e) {
             System.out.println("创建定时任务失败"+e);
             throw new Exception("创建定时任务失败");
         }
-        return null;
     }
 
     /**
@@ -335,10 +334,10 @@ public class JobAndTriggerService {
         }
 
         if (jobDetail.getJOB_NAME().equals("connectJob")){
-            jobDetailDto.setJobDesc("开灯定时任务");
+            jobDetailDto.setJobDesc("闭合开关定时任务");
         }
         if (jobDetail.getJOB_NAME().equals("breakJob")){
-            jobDetailDto.setJobDesc("关灯定时任务");
+            jobDetailDto.setJobDesc("断开开关定时任务");
         }
         Map dataMap = (Map) JedisUtil.getObject("dataMap");
         List deviceCodeList = (List) dataMap.get(jobClassName + "-" + jobGroupName);

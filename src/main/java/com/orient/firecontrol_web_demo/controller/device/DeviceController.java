@@ -165,4 +165,13 @@ public class DeviceController {
         return deviceService.drawLast7DaysGraph(deviceCode, button);
     }
 
+
+
+    @ApiOperation(value = "通过某一设备code查询所属单位及楼层的设备列表",notes = "通过某一设备code查询所属单位及楼层的设备列表")
+    @GetMapping("/getByDeviceCode")
+    @RequiresRoles(value = {"superadmin","admin"},logical = Logical.OR)
+    public ResultBean getDeviceListByOneDeviceCode(@RequestParam("deviceCode")@ApiParam(value = "设备code",name = "deviceCode",required = true) String deviceCode){
+        return deviceService.getDeviceListByOneDeviceCode(deviceCode);
+    }
+
 }

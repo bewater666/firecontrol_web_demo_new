@@ -20,6 +20,8 @@ public interface DeviceInfoDao {
 
     DeviceInfo findOne(String deviceCode);
 
+    DeviceInfo getOne(String deviceCode);
+
     /**
      * 更改设备状态 看心跳包发过来的设备状态与数据库中存的是否一致 一致就不做处理 不一致就需要更新状态
      * @param statusFF
@@ -82,4 +84,6 @@ public interface DeviceInfoDao {
      * @return
      */
     int countByDeviceTypeAndStatusAndOrgan(@Param("deviceType") String deviceType,@Param("buildCode") String buildCode);
+
+
 }

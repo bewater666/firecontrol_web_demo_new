@@ -33,12 +33,17 @@
         WHERE d.devicecode = #{deviceCode}
     </select>
 
+    <select id="getOne" resultMap="BaseMap">
+        SELECT id,buildcode,devicecode,devicetype,devicename,status,floor_code FROM tb_device
+        WHERE devicecode = #{deviceCode}
+    </select>
+
     <select id="findByBuildCode" resultType="com.orient.firecontrol_web_demo.model.device.DeviceInfo">
         SELECT id,buildcode,devicecode,devicetype,devicename,status,floor_code FROM tb_device WHERE buildcode = #{buildCode}
     </select>
 
     <select id="findByBuildCodeAndFloorCode"
-            resultType="com.orient.firecontrol_web_demo.model.device.DeviceInfo">
+            resultMap="BaseMap">
         SELECT id,buildcode,devicecode,devicetype,devicename,status,floor_code,typename FROM tb_device
         WHERE buildcode = #{buildCode} AND floor_code = #{floorCode}
     </select>
@@ -54,4 +59,5 @@
     <select id="countByDeviceTypeAndStatusAndOrgan" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM tb_device WHERE devicetype = #{deviceType} AND buildcode = #{buildCode} AND status = '离线'
     </select>
+
 </mapper>
